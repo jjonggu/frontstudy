@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <style>
+    /* 배경색 : background-color */
+    
+    .box1{
+      width: 100px;
+      height: 50px;
+      background-color: orange;
+    }
+  </style>
+
+  <div class="box1"></div>
+
+  <hr>
+  <style>
+    /* 
+      배경 이미지
+      1. background-image    : 배경 이미지 
+      2. background-size     : 배경 이미지 크기
+      3. background-repeat   : 배경 이미지 반복 여부
+      4. background-position : 배경 이미지 위치 
+    */
+
+    /* box 보다 작은 배경 이미지 처리하기 */
+    .box2 {
+      width: 300px;
+      height: 300px;
+      border: 1px solid blue;
+      background-image: url('../../assets/image/attach.png');
+      background-repeat: no-repeat;
+      /* 너비 50px, 높이는 비율에 맞춰 자동 조정 */
+      background-size: 50px;
+
+      /* 너비 50px, 높이 100px */
+      background-size: 50px 100px;
+
+      /* top : 배경 (top, bottom, left, right) 가로 가운데 배치 */
+      background-position: top;
+      background-position: bottom;
+      background-position: left;
+      background-position: right;
+      background-position: center;
+    }
+  
+  </style>
+
+  <div class="box2"></div>
+
+  <br>
+
+  <style>
+  /* box 보다 큰 배경 이미지 처리하기 */
+  .box3 {
+    width: 300px;
+    height: 300px;
+    border: 1px solid red;
+    background-image: url('../../assets/image/animal4.jpg');
+    background-repeat: no-repeat;
+    
+    /* contain : 이미지를 유지한 상태에서 최대한 크게 보여준다. */
+    background-size: contain;
+
+    /* cover : 이미지의 너비/높이 중 작은 부분은 최대한 키우고 box 밖으로 나간 부분은 잘린다. */
+    background-size: cover;
+  }
+  </style>
+
+  <div class="box3"></div>
+
+  <br>
+
+  <style>
+    /* box와 같은 크기의 배경 이미지 처리하기 */
+
+    .box4 {
+      /* 깨지는게 싫으면 이미지의 사이즈를 생각 */
+      width: 192px;
+      height: 128px;
+      background-image: url('../../assets/image/animal10.jpg');
+      
+      /* box 크기의 100% 너비를 가짐, 높이는 자동조정 */
+      background-size: 100%;
+    }
+  </style>
+
+  <div class="box4"></div>
+
+  <hr>
+  
+  <style>
+    .box5 {
+      width: 150px;
+      height: 1px;
+      border: 1px solid royalblue;
+      background-image: url('../../assets/image/logo.png');
+
+      /* 가로방향 0, 세로방향 이미지가 위로 -400px 이동 */
+      background-position: -1150px -170px;
+
+    }    
+  </style>
+ 
+ <div class="box5"></div>
+
+</body>
+</html>
