@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /*
+        JSON 내장 객체
+          1. JavaScript 객체 -> JSON 데이터
+             1) 서버로 데이터를 보낼때 활용
+             2) 형식 : JOSN.stringify(JS객체)
+          2. string 형식의 JSON 데이터 -> JavaScript 객체
+             1) 서버에서 받은 데이터
+             2) 형식 : JSON.parse(문자열JSON)
+        */
+
+        // 객체 생성
+        var car = {
+            maker: 'bmw',
+            model: '5시리즈'
+        };
+
+        // JavaScript 객체 -> string 형식의 JSON 데이터
+        // 객체에서 string으로 바뀜
+        var jsonDate = JSON.stringify(car)
+        console.log(jsonDate, typeof jsonDate)
+        
+        // string 형식의 JSON 데이터 -> JavaScript 객체
+        // 데이터 객체로 되돌리기
+        var jsObj = JSON.parse(jsonDate);
+        console.log(jsObj, typeof jsObj)
+        
+    </script>
+
+    <script>
+        /*
+        Array 내장 객체
+          1. forEach  : 반복문
+          2. filter() : 요소 검사
+          3. map()    : 요소 바꾸기
+        */
+
+        // 배열
+        // forEach는 기본적으로 function을 받아야한다.
+        var array = ['game', 'travel', 'cooking', 'nanaming', 'movie']
+        array.forEach(function(element){
+            console.log(element);
+        })
+
+        // ES6 버전 forEach
+        array.forEach((item) => {
+            console.log("ES6버전: " + item);
+        })
+        // ES5 버전 forEach
+        array.forEach(function(element, i){
+            console.log("ES5버전: " + i, element);
+        })
+
+        // ES6 버전 filter
+        array.filter((element) => {
+              element.length > 5; 
+        }).forEach((element) => {
+            console.log("ES6버전: " + element);
+        })
+
+        // ES5 버전 filter
+        array.filter(function(element){
+            return element.length > 5; 
+        }).forEach(function(element){
+            console.log("ES5버전: " + element);
+        })
+
+        // ES6 버전 map
+        array.map((element) => {
+              return element + '가자';
+        }).forEach((element)=> {
+            console.log("ES6버전: " + element);
+        })
+
+        // ES5 버전 map
+        array.map(function(element){
+            return element + '가자';
+        }).forEach(function(element){
+            console.log("ES5버전: " + element);
+        })
+
+        let date = array.map((item) => {
+            return item;
+        }).forEach((item) =>{
+            console.log('여기입니다.', item, typeof item);
+        })
+
+    </script>
+
+    <script>
+        /* Math 내장 함수 */
+        console.log('절대 값', Math.abs(-5));           // 5
+
+        // Math.ceil
+        console.log('정수 올림 값', Math.ceil(5.1));    // 6
+        console.log('정수 올림 값', Math.ceil(-5.1));   // -5
+
+        // Math.floor
+        console.log('정수 내림 값', Math.floor(5.1))    // 5
+        console.log('정수 내림 값', Math.floor(-5.1))   // -6
+
+        // Math.round
+        console.log('정수 반올림 값', Math.round(5.5))  // 6
+        console.log('정수 반올림 값', Math.round(-5.5)) // -5
+
+        // Math.trunc
+        console.log('정수 절사값', Math.trunc(5.5))     // 5
+        console.log('정수 절사값', Math.trunc(-5.5))    // -5
+
+        // Math.pow
+        console.log('제곱', Math.pow(2, 3))             // 2 ** 3 과 동일 === 8
+
+        // Math.sqrt
+        console.log('제곱근', Math.sqrt(25))            // root 25 === 5
+        
+        // Math.random
+        console.log('난수', Math.random());             // 0 <= 난수 < 1
+        console.log('난수', parseInt(Math.random() * 6 + 1));         1
+        
+    </script>
+
+    <script>
+        /* Date 내장 객체 */
+
+        // 현재 날짜와 시간
+        var now = Date();               // new Date().toString()
+        console.log(now, typeof now);   // string 형태로 보여줌
+
+        // 특정 날짜와 시간
+        var somday = new Date(2024, 0, 1, 12, 0, 0); //(2024-01-01 12:00:00) 월은 0 ~ 11 사이 값을 가짐
+        console.log(somday, typeof somday);
+
+        // 타임스탬프
+        var timestamp = Date.now();
+        console.log(timestamp, typeof timestamp);
+
+        // 날짜 / 시간 단위 가져오기
+        var now = new Date();   // ojbect 형식의 now
+        var year = now.getFullYear();
+        var month = now.getMonth() + 1; // + 1 해야 오늘날짜가 나옴
+        var day = now.getDate();
+        var hour = now.getHours();  // 시간부턴 s를 붙여주어야한다.
+        var minute = now.getMinutes();
+        var second = now.getSeconds();
+        var timestamp = now.getTime();
+        console.log(year, month, day, hour, minute, second, timestamp);
+    </script>
+
+    <script>
+    /* String 내장 객체 */
+    var str = 'JavaScript';
+
+    // 1. 길이 반환
+    console.log(str.length); // 괄호가 없는 length 속성
+
+    // 2. 특정 인덱스의 문자 반환
+    console.log('첫 번째 글자 : ' + str.charAt(0));
+    console.log('첫 번째 글자 : ' + str.charAt(str.length - 1)); // 마지막 글자
+
+    // 3. 특정 문자의 인덱스 반환
+    console.log('첫 번째 인덱스 : ' + str.indexOf('a'));
+    console.log('마지막 인덱스 : ' + str.lastIndexOf('a'));
+
+    // 4. 일부 문자열 반환
+    // substring java랑 똑같음
+    console.log('Java', str.substring(0, 4));    // 인덱스 0 <= 문자열 < 인덱스 4 이전까지, 4는 포함안함
+    console.log('Script', str.substring(4));     // 인덱스 4 <= 문자열 끝까지 0, 0 두번째 숫자를 제외하면 끝까지
+    
+    // 비주류
+    console.log('Java', str.slice(0, 4));        // 0, 4 둘다 인덱스
+    console.log('Script', str.slice(4));         // 4, 인덱스 끝까지
+    console.log('Java', str.slice(-10, -6));     // 인덱스 -10 <= 문자열 < 인덱스 -6 (마지막 글자의 인덱스는 -1이다.) 귀찮음
+    console.log('Script', str.slice(-6));        // 인덱스 -6 <= 문자열 끝까지 
+
+
+    
+    // 4. 0은 index 4는 문자열 (사용금지)
+    console.log('Java', str.substr(0, 4));       // 인덱스 0부터 4글자 (deprecated) 사용금지
+    console.log('Script', str.substr(4));        // 인덱스 4부터 끝가지 두번째 숫자 제외하면 끝까지 (deprecated) 사용금지
+
+    // 5. 특정 패턴을 가지는지 검사 결과를 반환
+    console.log(str.startsWith('Java'));         // 'Java'로 시작하면 true 반환 
+    console.log(str.endsWith('Script'));         // 'Script'로 끝나면 true 반환
+    console.log(str.match(/[A-Z]/));             // 정규식과 매칭하는 부분이 있으면 캡처된 결과의 첫번째 요소 배열로 반환, 없으면 NULL반환
+    
+    // 6. 치환 결과를 반환
+    console.log(str.replace('a', '_'));          // 발견된 첫번째 a를 _ 로 치환
+    console.log(str.replaceAll(/[A-Z]/g, '_'));  // 정규식을(대문자) 매칭하는 모든 부분을 _ 로 치환 / g 전역 플로그 없으면 에러
+    
+    String.prototype.myreplace = function(){
+    // 새로운 메소드 등록, 커스텀 가능
+    // prototype 스트링 타입의 모든 내장 함수를 보여준다.
+    }
+
+    // 7. 문자열 연결 결과 반환
+    console.log(str.concat('a', 'bc', 'def')); // 추가로 붙인다.
+
+    // 8. 반복 결과 반환
+    console.log(str.repeat(3)) // 3번 반복시킴
+
+    // 9. 대소문자 변환 결과 반환
+    console.log('대문자 : ' + str.toUpperCase())
+    console.log('소문자 : ' + str.toLowerCase())
+
+    // 10. 문자열 앞 뒤에 포함된 불필요한 공백제거 결과 반환
+    var str = '      Java  Script       ';
+    console.log('앞뒤제거: ' + str.trim());
+    console.log('앞제거  : ' + str.trimStart());  // alias trimLeft() 가능 
+    console.log('뒤제거  : ' + str.trimEnd())     // alias trimRight() 가능
+
+    // 11. 문자열 앞 뒤에 특정 문자 채운 결과 반환
+    var str = 'JavaScript';
+    console.log('앞채우기: ' + str.padStart(15, '*')); // 전체 15자리 중 부족한 부분은 *로 채운다.
+    console.log('뒤채우기: ' + str.padEnd(15, '*'));   // 전체 15자리 중 부족한 부분은 *로 채운다.
+
+    // 12. 문자열 객체 다루기
+    var str = new String('JavaScript');
+    console.log(str, typeof str);
+    console.log(str.valueOf(), typeof str.valueOf());
+
+    // 13. 문자열 분리해서 배열 반환
+    var str = 'a, b, c, d, e';
+    var array = str.split(',');
+    console.log(array);
+    var str = array.join(',');
+    console.log(str);
+
+    // 활용. 특정 문자 모두 찾아 바꾸기
+    console.log(str.split(',').join('')); // split(찾을문자).join(바꿀문자)
+    
+    </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /*
+        DOM
+          1. Document Object Model(문서 객체 모델)
+          2. HTML, XML 문서의 프로그래밍 인터페이스이다.
+          3. 프로그래밍 언어를 이용해서 DOM 구조(태그)에 접근한 뒤, 스타일, 내용을 변경할 수 있다.
+          4. 종류
+             1) var 변수 = document.getElementById(아이디)
+             2) var 배열 = document.getElementsByClass(클레스)
+             3) var 배열 = document.getElementsByTagName(태그이름)
+             4) var 변수 = document.querySelector(.클래스)
+             5) var 배열 = document.querySelectorAll(선택자)
+        */
+
+    </script>
+
+    <div class="wrap">
+        <div id="box1" class="primary-box">box1</div>
+        <div id="box2" class="primary-box">box2</div>
+        <div id="box3" class="primary-box">box3</div>
+    </div>
+    <script>
+       
+       /*
+        DOM 주의사항
+        - DOM구조 (태그)를 상단에 배치하고, <script>태그는 하단에 배치한다.
+        */
+
+        console.log(document.getElementById('box1'));
+        console.log(document.getElementsByClassName('primary-box'));
+        console.log(document.getElementsByTagName('div'));
+        console.log(document.querySelector('.wrap > #box1'));
+        console.log(document.querySelectorAll('.wrap > .primary-box'));
+
+        let items = ['a', 'b', 'c', 'd'];
+        let items1 = [{name:'park', age:'30', ceo:true}];
+
+        let date = items1.map((item) => {
+            return item.ceo;
+        })
+
+        document.getElementById('box1').innerHTML=date;
+        document.getElementsByClassName('primary-box').innerHTML=date;
+    </script>
+
+    <div id="div1"><strong>안녕하세요</strong></div>
+
+    <script>
+        /* 내부 텍스트 : textContent 속성 */
+        console.log(document.getElementById('div1').textContent);
+        /* 이미 있는 div의 내용을 변경 strong는 제거 됨 */
+        console.log(document.getElementById('div1').textContent = '<em>안녕하다</em>');
+        /* 기존에 있던 부분에 추가, 연산자 (+=) */
+        document.getElementById('div1').textContent += '<mark>반갑다</mark>';
+    </script>
+
+    <div id="div2"><strong>안녕하세요</strong></div>
+
+    <script>
+        /* 내부 요소 */
+        console.log(document.getElementById('div2').innerHTML);
+        // div2 요소를 수정 strong이 없어지고 em으로 바꾼다.
+        document.getElementById('div2').innerHTML = '<em>안녕하다</em>';
+        /* 기존에 있던 부분에 추가, 연산자 (+=) */
+        document.getElementById('div2').innerHTML += '<mark>안녕하다</mark>';
+    </script>
+
+    <div id="div3"><img src="../assets/image/animal10.jpg" width="100px" height="100px"></div>
+    
+    <script>
+        /* 
+        태그에 작성된 속성(attribute) 
+          1. 가져오기 ( getAttribute ) 속성
+          2. 수정하기 ( setAttribute ) 속성
+          3. 삭제하기 ( removeAttribute ) 속성
+        */
+        
+        // querySelector 선택자로 #div3 > img 의 src 요소 가져옴
+        console.log(document.querySelector('#div3 > img').getAttribute('src'));
+        // querySelector 선택자로 #div3 > img, src의 이미지 수정 
+        document.querySelector('#div3 > img').setAttribute('src', '../assets/image/animal2.jpg');
+        // width, css 삭제
+        document.querySelector('#div3 > img').removeAttribute('width');
+
+        // div3 > img의 명시대지 않는 alt은 가져올 수 없다.
+        // 속성을 가지고있기 때문에 객체이다. document.querySelector('#div3 > img')
+        // 태그 속성(attribute) = id, src (태그안의 속성들 전부)
+        // 객체 속성(property) = document.querySelector('#div3 > img')
+        // 태그 속성과 객체 속성은 완전 다르다, 태그 속성을 객체화 시킨다.
+        console.log(document.querySelector('#div3 > img').getAttribute('alt'));
+
+        // Attribute 속성은 정적인 값으로 html 문서가 로드 될 때 초기화 되고
+        // Property는 동적인 값으로 javascript에서 요소를 조작하고 업데이트할 때 사용한다.
+    </script>
+</body>
+</html>

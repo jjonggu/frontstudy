@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+
+        let ceoList = [
+            {name : "kim", age : 30, ceo:true},
+            {name : "sim", age : 31, ceo:false},
+            {name : "qim", age : 32, ceo:true},
+            {name : "rim", age : 33, ceo:false},
+            {name : "tim", age : 30, ceo:false}
+        ];
+
+        let names = ["kim", "sim", "qim", "rim", "tim"];
+        /*
+        forEach문
+          1. 반복문 
+          2. return은 없다.
+          3. index를 알고 싶다면 파라미터값에 index 사용
+        */    
+            ceoList.forEach((item, index) => {  
+                 console.log(item, index);           
+            });
+
+        /* 
+        map
+          1. map은 return은 필수이다.
+          2. 반드시 배열을 반환한다.
+          3. 내가 원하는 데이터를 가지고오고 싶을때 많이 사용한다.
+        */
+        let date = ceoList.map((item) => {
+            return item.ceo;
+        })
+        console.log(date);
+
+
+        /*
+        filter
+          1. return 조건을 넣어준다. 해당 조건이 true면 배열을 반환해준다.
+          2. true/false로 떨어지는 조건이여야 한다.
+        */
+        let date1 = ceoList.filter((item) => {
+        // true 이고 조건에 해당하는 데이터 배열로 보여준다.
+            return item.age == 30;      
+        });
+        console.log(date1);
+
+        /*
+        startsWith
+          1. 찾고싶은 부분은 검색하면 true, false로 데이터를 찾아준다.
+          2. false이면 아무것도 없는[] 을 보여준다.
+        */
+        let date2 = names.filter((item) => {
+            // startsWith으로 k 문자열이 있는 데이터 검색 true면 출력
+            return item.startsWith('k');    
+        });
+        console.log(date2);
+
+        /*
+        findIndex
+          1. index번호를 찾아준다.
+          2. 조건문에 의해 해당 데이터의 index 번호 출력
+        */
+        let date3 = ceoList.findIndex((item) => {
+            // 조건이 true면 qim의 index번호값만 return 해준다.
+            return item.name == 'qim';    
+        });
+        console.log(date3);
+
+        /*
+        some
+          1. true, false 존재 여부확인
+          2. 성능을 위해 조건이 만족하는 값이 발견되면 그 즉시 순회는 중단
+        */
+        let date4 = ceoList.some((item) => {
+            // 순회하다 10 보다 큰 age를 만난순간 중단후 true, false 출력
+            return item.age >= 10;    
+        });
+        console.log(date4);
+        
+        /*
+        evey
+        1. 배열 내부의 원소 순회하며 검사
+        2. 조건에 만족하면 true, 그반대면 false를 리턴
+        */
+        let date5 = ceoList.every((item) => {
+            // 순회하다 조건에 만족하지 않는 값이 발견되면 즉시 종료
+            return item.age >= 10;    
+        });
+        console.log(date5);
+
+        /*
+        find
+          1. return 조건에 대한 값을 string 타입으로 반환해준다.
+          2. 배열의 특정값 찾기, 조건에 맞는 값 중 첫번째 값을 리턴
+          3. 만족하는 배열이 없으면 undefined를 리턴한다.
+        */
+
+        let date6 = ceoList.find((item) => {
+            // 순회하다 조건에 만족하지 않는 값이 발견되면 즉시 종료
+            return item.age >= 10;    
+        });
+        console.log(date6)
+
+    </script>
+</body>
+</html>
