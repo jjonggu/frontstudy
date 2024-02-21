@@ -16,7 +16,7 @@ let UserMag = document.getElementById('user-mag')
 let resetBtn = document.getElementById('reset-btn')
 let chance = document.getElementById('chance')
 let chances = 5;
-
+let array = []
 
 // 이벤트
 randomBtn.addEventListener('click', playGame)
@@ -27,7 +27,6 @@ function randomMath(){
     randomNum = Math.floor(Math.random() * 100 + 1)
     console.log(randomNum)
 }
-
 randomMath();
 
 function playGame(){
@@ -41,11 +40,27 @@ function playGame(){
     }else if(userValue == randomNum){
         UserMag.textContent = '축하해! 정답이야!'
     }
+    
+    // 1부터 100까지의 숫자만 가능하도록 함
+    if(userValue > 100 || userValue <= 0){
+        UserMag.textContent = '1~100 까지의 숫자만 가능합니다!'
+        return
+    }
+
+    if(chances == 0){
+        UserMag.textContent = '기회를 모두 소진했습니다. ㅠ^ㅠ'
+        userInput.value = null;
+        randomBtn.disabled = true
+    }else{
+        chances --;
+        chance.innerHTML = `남은기회: ${chances}회`
+    }
+
 
 }
 
 // reset 초기화 버튼
 function resetGame(){
-    userInput.value = null;
+    window.location.reload()
 }
 

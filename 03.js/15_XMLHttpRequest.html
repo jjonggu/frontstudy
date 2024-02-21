@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  
+  <script>
+    /*
+      동기 통신(Synchronous)
+      1. 요청하고 응답 받을때까지 새로운 요청을 하지 않는 방식이다.
+      2. 개념
+        client           server
+            A  →→→→→→→→→→→→ A
+          ACK ←←←←←←←←←←←← A 성공
+            B  →→→→→→→→→→→→ B
+          NAK ←←←←←←←←←←←← B 실패
+            B  →→→→→→→→→→→→ B
+          ACK ←←←←←←←←←←←← B 성공
+            C  →→→→→→→→→→→→ C
+          ...
+    */
+    /*
+      비동기 통신(Asynchronous)
+      1. 응답을 기다리지 않고 새로운 요청을 보내는 방식이다.
+      2. 개념
+        client           server
+            A  →→→→→→→→→→→→ A
+            B  →→→→→→→→→→→→ B
+            C  →→→→→→→→→→→→ C
+           ACK ←←←←←←←←←←←← A 성공
+           NAK ←←←←←←←←←←←← B 실패
+            B  →→→→→→→→→→→→ B
+           ACK ←←←←←←←←←←←← B 성공
+          ...
+    */
+  </script>
+
+
+  <div id="div1">
+    <button type="button" id="btn1">요청1</button>
+    <div id="contents1"></div>
+  </div>
+  <script>
+
+    /* JSON 데이터를 가상으로 제공하는 Fake API : https://jsonplaceholder.typicode.com/ */
+
+    function ex01() {
+
+      /* 비동기 요청 */
+
+      // 비동기 통신을 수행하는 JavaScript 객체 생성
+      var xhr = new XMLHttpRequest();
+
+      // 요청 생성 (초기화)
+      // open(RequestMethod, URL, [Sync/Async], [user], [password])
+      // 1) RequestMethod : 요청 메소드 (GET, POST, PUT, DELETE 등)
+      // 2) URL           : 서버 경로
+      // 3) Sync/Async    : 동기(Sync)는 false, 비동기(Async)는 true(디폴트)
+      xhr.open('GET', 'https://jsonplaceholder.typicode.com/photos/1', true);
+
+      // 요청 헤더 값 설정 (필요하면 설정한다.)
+      // xhr.setRequestHeader(name, value);
+
+      // 요청 전송 (비동기 통신의 경우 즉시 응답된다.)
+      xhr.send();
+
+      // 서버 응답에 따른 이벤트 리스너 호출
+      xhr.addEventListener('readystatechange', function(){
+
+        // 1. readyState 속성 (요청 상태를 정수 값으로 저장하는 속성)
+        //   1) 0 : 클라이언트 생성(open() 호출 이전), UNSENT
+        //   2) 1 : 요청 생성(open() 호출), OPENED
+        //   3) 2 : 요청 전송(send() 호출), HEADERS_RECEIVED
+        //   4) 3 : 응답 다운로드 중, LOADING
+        //   5) 4 : 완료, DONE
+        if(xhr.readyState !== XMLHttpRequest.DONE)
+          return;
+
+        // 2. status 속성 (응답 HTTP 상태 코드)
+        if(xhr.status !== 200) {
+          console.log('응답 메시지', xhr.statusText);
+          return;
+        }
+
+        // 3. 응답 데이터 형식에 따른 속성
+        //   1) 응답 텍스트 : responseText, 텍스트 반환
+        //   2) 응답 XML    : responseXML,  XMLDocument 반환
+        var resData = JSON.parse(xhr.responseText);
+        var result = '<div class="album">';
+        result += '<div>앨범아이디:' + resData.albumId + '</div>';
+        result += '<div>아이디:' + resData.id + '</div>';
+        result += '<div>제목:' + resData.title + '</div>';
+        result += '<div><a href="' + resData.url + '" target="_blank">앨범이미지</a></div>';
+        result += '<div><img src="' + resData.thumbnailUrl + '"></div>';
+        result += '</div>';
+
+        // 4. 응답 데이터 화면에 표시
+        document.getElementById('contents1').innerHTML = result;
+
+      })
+
+    }
+
+    document.getElementById('btn1').addEventListener('click', ex01);
+
+  </script>
+
+  <hr>
+
+  <div id="div2">
+    <div>
+      <input type="text" id="begin" placeholder="시작NO">
+      <input type="text" id="end" placeholder="종료NO">
+      <button type="button" id="btn2">요청2</button>
+    </div>
+    <table border="1">
+      <thead>
+        <tr><td>앨범썸네일</td><td>앨범아이디</td><td>아이디</td><td>앨범제목(클릭하면 앨범이미지 오픈)</td></tr>
+      </thead>
+      <tbody id="contents2"></tbody>
+    </table>
+  </div>
+  <script>
+    
+    function ex02() {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'https://jsonplaceholder.typicode.com/photos', true);
+      xhr.send();
+      xhr.addEventListener('readystatechange', function(){
+        if(xhr.readyState !== XMLHttpRequest.DONE)
+          return;
+        if(xhr.status !== 200)
+          return;
+        var resData = JSON.parse(xhr.responseText);
+        var begin = document.getElementById('begin').value || 1;
+        var end   = document.getElementById('end').value || 10;
+        var result = '';
+        for(var i = begin - 1; i < end; i++) {
+          result += '<tr>';
+          result += '<td><img src="' + resData[i].thumbnailUrl + '" width="50px"></td>';
+          result += '<td>' + resData[i].albumId + '</td>';
+          result += '<td>' + resData[i].id + '</td>';
+          result += '<td><a href="' + resData[i].url + '" target="_blank">' + resData[i].title + '</a></td>';
+          result += '</tr>';
+        }
+        document.getElementById('contents2').innerHTML = result;
+      })
+    }
+
+    document.getElementById('btn2').addEventListener('click', ex02);
+
+  </script>
+
+  <hr>
+
+  <div id="div3">
+    <button type="button" id="btn3">요청3</button>
+    <div id="contents3"></div>
+  </div>
+
+<script>
+</script>
+
+
+<hr>
+
+<div><button type="button" id="btn4">ㅂㅌ</button></div>
+<div id="div4">
+    <div id="contents4">
+        <div class="author"></div>
+        <div class="author"></div>
+        <div class="author"></div>
+        <div class="author"></div>
+        <div class="author"></div>
+    </div>
+</div>
+<style>
+    #div4 {
+        width: 1000px;
+    }
+    #contents4 {
+        width: 1000px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    #contents4 > .author {
+        width: 300px;
+        height: 300px;
+        border: 1px solid gray;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    #contents4 > .author {
+        background-color: beige;
+    }
+</style>
+<script>
+
+</script>
+
+
+</body>
+</html>
