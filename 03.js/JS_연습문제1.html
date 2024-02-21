@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  
+  <button id="btn1">버튼1</button>
+  <div id="div1"></div>
+  <script>
+    /*
+      btn1을 클릭하면
+      <ul><li>봄</li><li>여름</li><li>가을</li><li>겨울</li></ul>
+      태그를 div1에 넣으시오.
+    */
+
+    let result = '<ul>'
+    let div = document.getElementById('div1')
+        document.getElementById('btn1').onclick = function(){
+        div.innerHTML = '<li>봄</li><li>여름</li><li>가을</li><li>겨울</li>'
+      
+    }
+    result += '</ul>'
+
+  </script>
+
+  <hr>
+
+  <button id="btn2">버튼2</button>
+  <div id="div2"></div>
+
+  <script>
+    /*
+      btn2를 클릭하면 
+      <ul>
+        <li><a href="https://www.google.com/"><img src="../../assets/image/logo_google.png" width="192px"></a></li>
+        <li><a href="https://www.naver.com/"><img src="../../assets/image/logo_naver.png" width="192px"></a></li>
+        <li><a href="https://www.gdu.co.kr/"><img src="../../assets/image/logo_goodee.png" width="192px"></a></li>
+      </ul>
+      태그를 div2에 넣으시오.
+    */
+  
+
+   
+   document.getElementById('btn2').addEventListener('click', function(){
+     var sites = [
+       { url: 'https://www.google.com/', file: 'logo_google.png' },
+       { url: 'https://www.naver.com/', file: 'logo_naver.png' },
+       { url: 'https://www.gdu.co.kr/', file: 'logo_goodee.png' }
+      ];
+      
+      var result = '<ul>'
+        for(let i = 0; i < sites.length; i++){
+            result += '<li>'
+            result += `<a href="${sites[i].url}"><img src="../assets/image/${sites[i].file}" width="192px"></a>`
+            result += '</li>'
+          }
+          result += '</ul>'
+          document.getElementById('div2').innerHTML = result
+  })
+
+
+  </script>
+
+  <hr>
+
+  <button id="btn3">버튼3</button>
+  <div id="div3">
+    <input type="password" id="pw">
+  </div>
+  <script>
+    /*
+      btn3을 클릭할때마다
+      <input type="password" id="pw">와 <input type="text" id="pw">를 서로 바꾸시오.
+    */
+   
+   document.getElementById('btn3').addEventListener('click', function(){
+      let textChange = document.getElementById('pw')
+
+      if(textChange.type === 'password'){
+        textChange.type = 'text';
+      }else if(textChange.type === 'text'){
+        textChange.type = 'password';
+      }else{
+        textChange.type = 'password'
+      }
+
+    })
+
+
+  </script>
+
+  <hr>
+
+  <button id="btn4">버튼4</button>
+  <div id="div4">
+    <span id="year">0000</span>년
+    <span id="month">00</span>월
+    <span id="day">00</span>일
+    <span id="hour">00</span>시
+    <span id="minute">00</span>분
+    <span id="second">00</span>초
+  </div>
+  <script>
+    /*
+      btn4를 클릭하면 시계를 동작시키시오.
+    */
+
+    document.getElementById('btn4').addEventListener('click', function() {
+        watch()
+        // 1초 후에 동작
+        setInterval(watch, 1000);
+    })
+
+    function watch(){
+        let now = new Date();
+        console.log(now);
+        // padStart(2, '0') 전체 2자리 부족하면0채움
+        document.getElementById('year').textContent = String(now.getFullYear()).padEnd(4, '0')
+        document.getElementById('month').textContent = String(now.getMonth() + 1).padStart(2, '0')  
+        document.getElementById('day').textContent = String(now.getDay()).padStart(2, '0')
+        document.getElementById('hour').textContent = String(now.getHours()).padStart(2, '0')
+        document.getElementById('minute').textContent = String(now.getMinutes()).padStart(2, '0')
+        document.getElementById('second').textContent = String(now.getSeconds()).padStart(2, '0')
+    }
+  </script>
+
+  <hr>
+
+  <div id="div5">
+    <div>
+      <input type="checkbox" id="chk_all" onclick="selectAll(this)">
+      <label for="chk_all">전체선택</label>
+    </div>
+    <div>
+      <input type="checkbox" id="chk_one" class="chk_each">
+      <label for="chk_one">개별선택1</label>
+    </div>
+    <div>
+      <input type="checkbox" id="chk_two" class="chk_each">
+      <label for="chk_two">개별선택2</label>
+    </div>
+    <div>
+      <input type="checkbox" id="chk_three" class="chk_each">
+      <label for="chk_three">개별선택3</label>
+    </div>
+  </div>
+  <script>
+    /*
+      전체 선택 / 개별 선택을 구현하시오.
+    */
+
+    let chkAll = document.getElementById('chk_all')
+    let chkEach = document.getElementsByClassName('chk_each')
+
+    function selectAll(evt){
+      for(let i = 0; i < chkEach.length; i++){
+         chkEach[i].checked = evt.checked;
+         let total = 0;
+         for(let j = 0; j < chkEach.length; i++){
+          
+         } 
+      }
+    }
+  </script>
+
+</body>
+</html>

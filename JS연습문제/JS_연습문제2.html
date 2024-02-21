@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  
+  <div id="div1"></div>
+  <button id="btn1">버튼1</button>
+  <style>
+    #div1 {
+      width: 100px;
+      height: 100px;
+    }
+  </style>
+  <script>
+    /*
+      btn1을 클릭하면 0.1초마다 임의의 색상으로 div1의 색상을 변경하시오.
+      Hint) rgb(0,0,0) ~ rgb(255,255,255) 방식으로 색상을 표현한다.
+    */
+    function getRandomNumber(begin, count) {
+      return parseInt(Math.random() * count + begin);
+    }
+    function ex01() {
+      document.getElementById('btn1').addEventListener('click', function(){
+        document.getElementById('div1').style.backgroundColor
+          = 'rgb(' + getRandomNumber(0,256) + ',' + getRandomNumber(0,256) + ',' + getRandomNumber(0,256) + ')';
+        setInterval(function(){
+          document.getElementById('div1').style.backgroundColor
+            = 'rgb(' + getRandomNumber(0,256) + ',' + getRandomNumber(0,256) + ',' + getRandomNumber(0,256) + ')';
+        }, 100);
+      })
+    }
+    ex01();
+  </script>
+
+  <hr>
+
+  <div id="div2">
+    <table border="1">
+      <thead>
+        <tr><td>번호</td><td>썸네일</td><td>제목</td><td>감독</td></tr>
+      </thead>
+      <tbody id="movies"></tbody>
+    </table>
+  </div>
+  <button id="btn2">가져오기</button>
+  <script>
+    /*
+      btn2를 클릭하면 테이블을 완성하시오.
+      번호   썸네일    제목     감독
+    */
+    // 함수 정의
+    function ex02() {
+      var movies = {
+        year: 2023,
+        genre: 'action',
+        items: [
+          {
+            no: '20235034',
+            thumbnail: 'https://www.kobis.or.kr/common/mast/movie/2023/11/thumb_x192/thn_65a860f7dfb04c449f4a0f0d3207edee.jpg',
+            title: '더 마블스',
+            director: '니아 다코스타'
+          },
+          {
+            no: '20218935',
+            thumbnail: 'https://www.kobis.or.kr/common/mast/movie/2023/08/thumb_x192/thn_b9b13d4a5ce94150a8ee0522f60b978f.jpg',
+            title: '더 문',
+            director: '김용화'
+          },
+          {
+            no: '20232631',
+            thumbnail: 'https://www.kobis.or.kr/common/mast/movie/2023/06/thumb_x192/thn_fbc864b8a3f64ee98e22372534a81cec.jpg',
+            title: '미션 임파서블:데드 레코닝 PART ONE',
+            director: '크리스토퍼 맥쿼리'
+          }
+        ]
+      }
+      var result = '';
+      movies.items.forEach(function(element){
+        result += '<tr>';
+        result += '<td>' + element.no + '</td>';
+        result += '<td><img src="' + element.thumbnail + '" width="50px"></td>';
+        result += '<td>' + element.title + '</td>';
+        result += '<td>' + element.director + '</td>';
+        result += '</tr>';
+      })
+      document.getElementById('movies').innerHTML = result;
+    }
+    // 함수 호출 & 이벤트
+    document.getElementById('btn2').addEventListener('click', ex02);
+  </script>
+
+  <hr>
+
+  <div id="div3">
+    <input type="text" id="number" placeholder="값">
+    <input type="text" id="digit" placeholder="자리수">
+    <input type="text" id="result" placeholder="결과" readonly>
+    <button id="btn3">계산</button>
+  </div>
+  <script>
+    /*
+      btn3를 클릭하면 number에 입력된 값을 digit에 입력된 자리수로 올림한 결과를 출력하시오.
+      예시)
+      number    digit   result
+      555.555   2       555.56
+      555.555   1       555.6
+      555.555   0       556
+      555.555   생략    556
+      555.555   -1      560
+      555.555   -2      600
+      555.555   -3      1000
+    */
+    /*
+      Math.ceil(number * Math.pow(10, digit)) / Math.pow(10, digit)
+      --------------------------------------------------------------
+      Math.ceil(555.555 * 100)  / 100  === 555.56
+      Math.ceil(555.555 * 10)   / 10   === 555.6
+      Math.ceil(555.555 * 1)    / 1    === 556
+      Math.ceil(555.555 * 0.1)  / 0.1  === 560
+      Math.ceil(555.555 * 0.01) / 0.01 === 600
+    */
+    function myCeil(number, digit) {
+      digit = digit || 0;
+      return Math.ceil(number * Math.pow(10, digit)) / Math.pow(10, digit);
+    }
+    function ex03() {
+      document.getElementById('btn3').addEventListener('click', function(){
+        var number = document.getElementById('number').value;
+        var digit = document.getElementById('digit').value;
+        if(isNaN(number) || isNaN(digit)) {
+          alert('숫자만 입력하세요');
+          return;
+        }
+        document.getElementById('result').value = myCeil(number, digit);
+      })
+    }
+    ex03();
+  </script>
+  
+  <hr>
+
+  <div id="div4"></div>
+  <style>
+    #div4 {
+      width: 192px;
+      height: 128px;
+      background-image: url(../../assets/image/loading.gif);
+      background-size: cover;
+      transition-duration: 0.5s;
+      transition-property: background-image;
+    }
+  </style>
+  <script>
+    /* 5초마다 자동으로 div4의 배경 이미지를 변경하시오. (animal1.jpg ~ animal10.jpg 중 하나 사용) */
+    function ex04() {
+      setInterval(function(){
+        document.getElementById('div4').style.backgroundImage
+          = 'url(../../assets/image/animal' + getRandomNumber(1,10) + '.jpg)';
+      }, 5000);
+    }
+    ex04();
+  </script>
+
+  <hr>
+
+  <div id="div5"></div>
+  <script>
+    /*
+      div5에 디데이를 표시하시오. (1초마다 갱신하시오.)
+      D-Day : 2024-11-14 (수능일)
+      1) 1일 이상 남은 경우 : D-DAY 270일
+      2) 1일 미만 남은 경우 : D-DAY 15:30:45
+      3) 디데이가 지난 경우 : D-DAY가 지났습니다.
+
+      Hint) 남은 시간 = 디데이's 타임스탬프 - 현재's 타임스탬프
+      타임스탬프로 계산된 남은 시간은 일/시/분/초 단위로 변환 후 처리한다.
+    */
+    function ex05() {
+      var now = new Date();
+      var dday = new Date(2024, 10, 14);  // 2024-11-14
+      var remainMillis = dday.getTime() - now.getTime();
+      var remainSeconds = parseInt(remainMillis / 1000);
+      var day = parseInt(remainSeconds / 60 / 60 / 24);
+      var msg = 'D-DAY';
+      if(remainSeconds < 0) {
+        msg += '가 지났습니다.';
+      } else {
+        if(day >= 1) {
+          msg += '&nbsp;' + day + '일';
+        } else {
+          var hour = parseInt(remainSeconds / 60 / 60) % 24;
+          var minute = parseInt(remainSeconds / 60) % 60;
+          var second = remainSeconds % 60;
+          msg += '&nbsp;'
+              + String(hour).padStart(2,'0')
+              + ':'
+              + String(minute).padStart(2,'0')
+              + ':'
+              + String(second).padStart(2,'0');
+        }
+      }
+      document.getElementById('div5').innerHTML = msg;
+    }
+    setInterval(ex05, 1000);
+  </script>
+
+</body>
+</html>
