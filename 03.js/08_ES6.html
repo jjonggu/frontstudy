@@ -111,15 +111,12 @@
     */
 
     const myFunc1 = () => {
-      console.log('myFunc 실행');
+      console.log('myFunc1 실행');
     }
-
     myFunc1();
 
-    const myFunc2 = () => 
-          'hello world';
-
-      console.log(myFunc2());
+    const myFunc2 = () => 'hello world';  // return 만 존재하는 경우 return 키워드 생략이 가능하다.
+    console.log(myFunc2());
 
   </script>
 
@@ -144,6 +141,426 @@
     console.log(getTotal(1, 2, 3, 4));
 
   </script>
+
+  <script>
+
+    /* 비동기 작업 : 응답을 기다리지 않는다. */
+
+    let albumId;  // 초기화가 없으면 undefined
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://jsonplaceholder.typicode.com/photos/1');
+    xhr.send();
+    xhr.addEventListener('readystatechange', ()=>{
+      if(xhr.readyState !== XMLHttpRequest.DONE)
+        return;
+      if(xhr.status !== 200)
+        return;
+      let album = JSON.parse(xhr.responseText);
+      albumId = album.albumId;
+    })
+    console.log('albumId:', albumId);  // albumId는 1을 기대하지만, 비동기 작업의 응답을 기다리지 않고 곧바로 실행되기 때문에 undefined 상태가 된다.
+
+  </script>
+
+  <script>
+
+    /*
+      Promise
+      1. 비동기 작업이 맞이할 미래의 완료 또는 실패에 따른 그 결과값을 나타내는 객체이다.
+      2. 미래의 어떤 시점에 결과를 제공하겠다는 '약속'을 반환하는 방식으로 동작한다.
+      3. Promise 상태
+        1) pending   : 초기상태 (이행도 아니고 거부도 아닌 상태)
+        2) fulfilled : 이행상태 (비동기 작업 성공)
+        3) reject    : 거부상태 (비동기 작업 실패)
+      4. Promise 생성자
+        1) Promise를 지원하지 않는 함수를 Promise로 만들 때 사용한다.
+        2) 형식
+          new Promise(executor)
+        3) executor : 실행 함수
+          (1) 인자가 resolve, reject 인 실행 함수이다.
+          (2) resolve는 Promise 이행 함수이고, reject은 Promise 거부 함수이다.
+      5. Promise의 then() 메소드
+        1) Promise 객체가 호출할 수 있다.
+        2) Promise 이행 함수와 Promise 거부 함수를 콜백으로 추가한다.
+        3) 콜백이 호출될 경우 그 반환값을 처리하고, 호출되지 않는 경우 처리된 상태와 값을 그대로 가진 새로운 Promise를 반환한다.
+        4) 형식
+          then(()=>{ // 이행 함수 }, [()=>{ // 거부 함수 }])
+    */
+
+    let albumId2;
+    const myPromise = new Promise((resolve, reject)=>{
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', 'https://jsonplaceholder.typicode.com/photos/1');
+      xhr.send();
+      xhr.addEventListener('readystatechange', ()=>{
+        if(xhr.readyState !== XMLHttpRequest.DONE)
+          return;
+        if(xhr.status !== 200)
+          reject(xhr.statusText);  // Promise 거부 함수 실행 (거부 사유를 전달할 수 있다.)
+        resolve(JSON.parse(xhr.responseText));  // Promise 이행 함수 실행 (응답 결과를 전달할 수 있다.)
+      })
+    });
+    myPromise
+      .then((resData)=>{
+        console.log(resData);
+        albumId2 = resData.albumId;
+        console.log('albumId2:', albumId2);
+      }, (msg)=>{
+        console.log(msg);
+      });
+
+  </script>
+
+  <script>
+
+    const fnPromise1 = (url)=>{
+      return new Promise((resolve, reject)=>{
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        xhr.send();
+        // load 이벤트 : XMLHttpRequest 트랜잭션 성공 시 발생하는 이벤트
+        xhr.addEventListener('load', ()=>{
+          resolve(JSON.parse(xhr.responseText));
+        })
+        // error 이벤트 : 실패 시 발생하는 이벤트
+        xhr.addEventListener('error', ()=>{
+          reject(xhr.statusText);
+        })
+      });
+    }
+
+    fnPromise1('https://jsonplaceholder.typicode.com/photos/1')
+      .then((resData)=>{
+        console.log(resData);
+      }, (msg)=>{
+        console.log(msg);
+      });
+
+  </script>
+
+  <script>
+
+    const fnPromise2 = (method, url)=>{
+      return new Promise((resolve, reject)=>{
+        const xhr = new XMLHttpRequest();
+        xhr.open(method, url);
+        xhr.send();
+        xhr.addEventListener('load', ()=>resolve(xhr.responseXML));
+        xhr.addEventListener('error', ()=>reject(xhr.statusText));
+      });
+    }
+
+    fnPromise2('GET', 'https://thetestrequest.com/authors/1.xml')
+      .then((resData)=>{
+        console.log(resData);  // XMLDocument 출력
+      }, (msg)=>{
+        console.log(msg);
+      });
+
+  </script>
+
+  <script>
+
+    /*
+      fetch() 전역 함수
+      1. 네트워크에서 자원(리소스) 취득을 시작한 뒤 응답이 가능한 상태가 되면 이를 이행하는 Promise를 반환한다.
+      2. Response 객체를 이행 함수에 전달한다. (이행한다.)
+      3. Response 객체가 가진 데이터를 반환하는 메소드
+        1) json() : JSON 데이터를 이행하는 Promise 반환
+        2) text() : 텍스트 데이터를 이행하는 Promise 반환
+        3) blob() : 바이너리(블롭) 데이터를 이행하는 Promise 반환
+      4. 형식
+        fetch(resource, [options])
+        1) resource : 일반적으로 URL 또는 Request 객체
+        2) options
+          (1) method  : 요청 메소드 (GET, POST, PUT, DELETE 등)
+          (2) headers : 요청 헤더
+          (3) body    : 요청 본문 (주로 blob, FormData 등)
+          (4) mode    : 요청 모드 (cors, no-cors, same-origin)
+          (5) cache   : HTTP 캐시 (no-cache, force-cache 등)
+    */
+
+    // options
+    const options = {
+      method: 'GET'
+    }
+
+    // JSON
+    fetch('https://jsonplaceholder.typicode.com/photos/1', options)
+      .then((response)=>{
+        // 실제 응답 성공 여부를 처리하기를 권장
+        if(response.ok) {
+          return response.json();
+        }
+      })
+      .then((resData)=>{
+        console.log(resData);
+      });
+
+    fetch('https://jsonplaceholder.typicode.com/photos/1', options)
+      .then(response=>response.json())
+      .then(resData=>{
+        console.log(resData);
+      });
+
+    // XML
+    fetch('https://thetestrequest.com/authors/1.xml', options)
+      .then((response)=>{
+        if(response.ok)
+          return response.text();
+      })
+      .then((resData)=>{
+        // parseFromString(string, mime-type)
+        // mime-type
+        //   1) text/plain       : 텍스트 데이터
+        //   2) text/html        : HTML 데이터
+        //   3) application/xml  : XML 데이터
+        //   4) application/json : JSON 데이터
+        let domParser = new DOMParser();
+        let xmlDoc = domParser.parseFromString(resData, 'application/xml');
+        console.log(xmlDoc);
+      });    
+      
+  </script>
+
+  <div id="div1">
+    <img>
+  </div>
+  <script>
+
+    // blob (대표적으로 이미지)
+
+    fetch('../../assets/image/animal1.jpg')
+      .then((response)=>{
+        if(!response.ok)
+          throw new Error(response.status);
+        return response.blob();
+      })
+      .then((binaryImage)=>{
+        let img = document.querySelector('#div1 > img');
+        img.src = URL.createObjectURL(binaryImage);
+        img.width = 192;
+      })
+      .catch((msg)=>{
+        console.log(msg);
+      });
+
+  </script>
+
+  <hr>
+
+  <div id="div2">
+    <button type="button">사용자조회</button>
+    <div></div>
+  </div>
+  <script>
+
+    // 사용자 목록 : https://jsonplaceholder.typicode.com/users
+
+    // #div2 > div 에 id, name, username, email, address, phone, website, company 가져오기
+
+    const getUsers = (param1, param2)=>{
+      fetch(param1, { method: param2 })
+        .then(response=>response.json())
+        .then(resData=>{
+          let result = '';
+          for(let i = 0; i < resData.length; i++){
+            result += '<ul>';
+            result += `<li>id: ${resData[i].id}</li>`;
+            result += `<li>name: ${resData[i].name}</li>`;
+            result += `<li>username: ${resData[i].username}</li>`;
+            result += `<li>email: ${resData[i].username}</li>`;
+            result += `<li>address.street: ${resData[i].address.street}</li>`;
+            result += `<li>address.suite: ${resData[i].address.suite}</li>`;
+            result += `<li>address.city: ${resData[i].address.city}</li>`;
+            result += `<li>address.zipcode: ${resData[i].address.zipcode}</li>`;
+            result += `<li>address.geo.lat: ${resData[i].address.geo.lat}</li>`;
+            result += `<li>address.geo.lng: ${resData[i].address.geo.lng}</li>`;
+            result += `<li>phone: ${resData[i].phone}</li>`;
+            result += `<li>website: ${resData[i].website}</li>`;
+            result += `<li>company.name: ${resData[i].company.name}</li>`;
+            result += `<li>company.catchPhrase: ${resData[i].company.catchPhrase}</li>`;
+            result += `<li>company.bs: ${resData[i].company.bs}</li>`;
+            result += '</ul>';
+          }
+          document.querySelector('#div2 > div').innerHTML = result;
+        });
+    }
+
+    document.querySelector('#div2 > button')
+      .addEventListener('click',() => {
+            getUsers('https://jsonplaceholder.typicode.com/users', 'GET');
+          }
+      );
+  
+  </script>
+
+  <script>
+    /* ES8 (ECMA2017)에서 도입된 async와 await 키워드 */
+
+    /*
+     async 키워드
+     1. 비동기 함수를 만드는 키워드이다.
+     2. 함수 앞에 추가된다.
+        1) async function 함수이름 () { }
+        2) async function() { }
+        3) async () =>{ }
+        4) const 함수이름 = async function(){ }
+        5) const 함수이름 = async () => { }
+     3. async 함수는 항상 Promise를 반환한다.
+    */
+
+    /*
+      await 키워드
+      1. Promise 이행을 기다리기 위해서 사용한다.
+      2. 오직 async 함수 내부에서만 사용할 수 있다.
+      3. 형식
+         value = await expression
+
+         async function(){
+
+         멈춰기다려 => await getUser(){
+                       1. reject으로 떨어지면 알아서 예외처리한다.
+                       2. function 이 일반적으로 사용되는 형태
+              }
+         }
+    */
+  </script>
+
+  <script>
+    // 프라미스 미래의 처리할 것을 받아서 주겠다 .then 이 처리해서 주겠다는거임
+   function fnHold(number, second){
+      return new Promise((resolve, reject) => {
+        setTimeout(() => resolve(number), second * 1000);
+      })
+   }
+
+   async function fnAdder(number1, number2){
+    let n1 = await fnHold(number1, 3)
+    let n2 = await fnHold(number2, 2)
+    console.log(n1 + n2)
+   }
+
+   fnAdder(10, 20)
+  </script>
+
+  <script>
+    // JSON 데이터 콘솔에 출력하기
+    async function aaa() {
+      return 'aaa';
+    }
+
+    aaa()
+    .then(value => console.log(value))  // aaa 가 찍힘
+
+    async function bbb(){
+      let a = await aaa();  // aaa() 함수의 반환 Promise가 이행(resolve)될때까지 기다린다.
+      console.log('bbb:', a)
+    }
+
+    bbb()
+  </script>
+  
+  <script>
+    async function getAlbum(){
+      // GET이 기본 안써줘도 GET & 기다려 시전 / await 처리를 기다리라고 시전
+      const response = await fetch('https://jsonplaceholder.typicode.com/photos/1', { method:'GET' })
+
+      // await 기다려 시전이후 실행
+      if(response.ok){
+        return await response.json() // json 을반환하는 promise = 미래의 보내줄 json 데이따 기다려
+      } else {
+        return Promise.reject(responseText)
+      }
+    }
+
+    getAlbum()
+      .then(resData => console.log(resData))
+      .catch(msg => console.log(msg))
+    
+    
+  </script>
+
+
+<style>
+  #div4 {
+    width: 1000px;
+  }
+  #contents4 {
+    width: 1000px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  #contents4 > .author {
+    width: 300px;
+    height: 300px;
+    border: 1px solid gray;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  #contents4 > .author:hover {
+    background-color: beige;
+  }
+  
+</style>
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>저자 정보 가져오기</title>
+</head>
+<body>
+
+<!-- 버튼을 클릭할 때 저자 정보를 가져오는 함수 호출 -->
+<div><button type="button" id="btn4">저자 정보</button></div>
+
+<!-- 저자 정보를 표시할 div -->
+<div id="div4">
+  <div id="contents4"></div>
+</div>
+
+<script>
+// 함수 정의: API에서 저자 정보 가져와서 화면에 표시
+const getUser = (param1, param2) => {
+  fetch(param1, { method: param2 })
+    .then(response => response.text())
+    .then(resData => {
+      var result = '';
+      // XML 데이터 파싱
+      let domParser = new DOMParser();
+      let xmlDoc = domParser.parseFromString(resData, 'application/xml');
+      var objects = xmlDoc.getElementsByTagName('object');
+
+      // 가져온 정보를 화면에 표시
+      for (var i = 0; i < objects.length; i++) {
+        result += '<ul class="author">';
+        result += '  <div>id:' + objects[i].getElementsByTagName('id')[0].textContent + '</div>';
+        result += '  <div>name:' + objects[i].getElementsByTagName('name')[0].textContent + '</div>';
+        result += '  <div>email:' + objects[i].getElementsByTagName('email')[0].textContent + '</div>';
+        result += '  <div>created-at:' + objects[i].getElementsByTagName('created-at')[0].textContent + '</div>';
+        result += '  <div>updated-at:' + objects[i].getElementsByTagName('updated-at')[0].textContent + '</div>';
+        result += '  <div><img src="' + objects[i].getElementsByTagName('avatar')[0].textContent + '" width="150px"></div>';
+        result += '</ul>';
+      }
+
+      // 결과를 화면에 표시하는 div에 설정
+      document.querySelector('#div4 > #contents4').innerHTML = result;
+    });
+}
+
+// 버튼 클릭 이벤트에 함수 연결
+document.getElementById('btn4')
+  .addEventListener('click', () => {
+    // API 주소와 메소드 전달하여 함수 호출
+    getUser('https://thetestrequest.com/authors.xml', 'GET');
+  });
+</script>
+
+</body>
+</html>
+
+
 
 </body>
 </html>

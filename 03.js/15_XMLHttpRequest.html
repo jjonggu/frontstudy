@@ -124,7 +124,7 @@
     </table>
   </div>
   <script>
-    
+
     function ex02() {
       var xhr = new XMLHttpRequest();
       xhr.open('GET', 'https://jsonplaceholder.typicode.com/photos', true);
@@ -160,49 +160,109 @@
     <button type="button" id="btn3">요청3</button>
     <div id="contents3"></div>
   </div>
+  <script>
+    function ex03() {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'https://thetestrequest.com/authors/1.xml');
+      xhr.send();
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState !== XMLHttpRequest.DONE)
+          return;
+        if(xhr.status !== 200)
+          return;
+        var resData = xhr.responseXML;
+        var result = '<div>';
+        result += '<div>id:' + resData.getElementsByTagName('id')[0].textContent + '</div>';
+        result += '<div>id_type:' + resData.getElementsByTagName('id')[0].getAttribute('type') + '</div>';
+        result += '<div>name:' + resData.getElementsByTagName('name')[0].textContent + '</div>';
+        result += '<div><img src="' + resData.getElementsByTagName('avatar')[0].textContent + '"></div>';
+        result += '<div>created-at:' + resData.getElementsByTagName('created-at')[0].textContent + '</div>';
+        result += '<div>updated-at:' + resData.getElementsByTagName('updated-at')[0].textContent + '</div>';
+        result += '</div>';
+        document.getElementById('contents3').innerHTML = result;
+      }
+    }
+    document.getElementById('btn3').onclick = ex03;
+  </script>
 
-<script>
-</script>
+  <hr>
 
-
-<hr>
-
-<div><button type="button" id="btn4">ㅂㅌ</button></div>
-<div id="div4">
-    <div id="contents4">
-        <div class="author"></div>
-        <div class="author"></div>
-        <div class="author"></div>
-        <div class="author"></div>
-        <div class="author"></div>
-    </div>
-</div>
-<style>
+  <div><button type="button" id="btn4">요청4</button></div>
+  <div id="div4">
+    <div id="contents4"></div>
+  </div>
+  <style>
     #div4 {
-        width: 1000px;
+      width: 1000px;
     }
     #contents4 {
-        width: 1000px;
-        display: flex;
-        flex-wrap: wrap;
+      width: 1000px;
+      display: flex;
+      flex-wrap: wrap;
     }
-
     #contents4 > .author {
-        width: 300px;
-        height: 300px;
-        border: 1px solid gray;
-        border-radius: 10px;
-        cursor: pointer;
+      width: 300px;
+      height: 300px;
+      border: 1px solid gray;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    #contents4 > .author:hover {
+      background-color: beige;
+    }
+  </style>
+  <script>
+
+    function ex04() {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'https://thetestrequest.com/authors.xml');
+      xhr.send();
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState !== XMLHttpRequest.DONE)
+          return;
+        if(xhr.status !== 200)
+          return;
+        var resData = xhr.responseXML;
+        var objects = resData.getElementsByTagName('object');
+        var result = '';
+        for(var i = 0; i < objects.length; i++) {
+          result += '<div class="author">';
+          result += '  <div>id:' + objects[i].getElementsByTagName('id')[0].textContent + '</div>';
+          result += '  <div>name:' + objects[i].getElementsByTagName('name')[0].textContent + '</div>';
+          result += '  <div>email:' + objects[i].getElementsByTagName('email')[0].textContent + '</div>';
+          result += '  <div>created-at:' + objects[i].getElementsByTagName('created-at')[0].textContent + '</div>';
+          result += '  <div>updated-at:' + objects[i].getElementsByTagName('updated-at')[0].textContent + '</div>';
+          result += '  <div><img src="' + objects[i].getElementsByTagName('avatar')[0].textContent + '" width="150px"></div>';
+          result += '</div>';
+        }
+        document.getElementById('contents4').innerHTML = result;
+      }
     }
 
-    #contents4 > .author {
-        background-color: beige;
+    document.getElementById('btn4').onclick = ex04;
+
+  </script>
+
+  <hr>
+
+  <button id="btn5">공공데이터요청</button>
+  <script>
+    
+    function ex05() {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'http://apis.data.go.kr/B552061/AccidentDeath/getRestTrafficAccidentDeath?searchYear=2020&siDo=1100&guGun=1116&type=json&numOfRows=20&pageNo=1&serviceKey=인코딩인증키');
+      xhr.send();
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState !== XMLHttpRequest.DONE)
+          return;
+        if(xhr.status !== 200)
+          return;
+        var resData = JSON.parse(xhr.responseText);
+        console.log(resData);
+      }
     }
-</style>
-<script>
-
-</script>
-
+    document.getElementById('btn5').onclick = ex05;
+  </script>
 
 </body>
 </html>
