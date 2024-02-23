@@ -329,7 +329,6 @@
   <script>
 
     // blob (대표적으로 이미지)
-
     fetch('../../assets/image/animal1.jpg')
       .then((response)=>{
         if(!response.ok)
@@ -359,7 +358,7 @@
 
     // #div2 > div 에 id, name, username, email, address, phone, website, company 가져오기
 
-    const getUsers = (param1, param2)=>{
+    const getUsers = (url, method)=>{
       fetch(param1, { method: param2 })
         .then(response=>response.json())
         .then(resData=>{
@@ -387,9 +386,8 @@
         });
     }
 
-    document.querySelector('#div2 > button')
-      .addEventListener('click',() => {
-            getUsers('https://jsonplaceholder.typicode.com/users', 'GET');
+    document.querySelector('#div2 > button').addEventListener('click',() => {
+                  getUsers('https://jsonplaceholder.typicode.com/users', 'GET');
           }
       );
   
@@ -527,6 +525,7 @@ const getUser = (param1, param2) => {
     .then(response => response.text())
     .then(resData => {
       var result = '';
+      
       // XML 데이터 파싱
       let domParser = new DOMParser();
       let xmlDoc = domParser.parseFromString(resData, 'application/xml');
@@ -535,12 +534,12 @@ const getUser = (param1, param2) => {
       // 가져온 정보를 화면에 표시
       for (var i = 0; i < objects.length; i++) {
         result += '<ul class="author">';
-        result += '  <div>id:' + objects[i].getElementsByTagName('id')[0].textContent + '</div>';
-        result += '  <div>name:' + objects[i].getElementsByTagName('name')[0].textContent + '</div>';
-        result += '  <div>email:' + objects[i].getElementsByTagName('email')[0].textContent + '</div>';
-        result += '  <div>created-at:' + objects[i].getElementsByTagName('created-at')[0].textContent + '</div>';
-        result += '  <div>updated-at:' + objects[i].getElementsByTagName('updated-at')[0].textContent + '</div>';
-        result += '  <div><img src="' + objects[i].getElementsByTagName('avatar')[0].textContent + '" width="150px"></div>';
+        result += '  <li>id:' + objects[i].getElementsByTagName('id')[0].textContent + '</li>';
+        result += '  <li>name:' + objects[i].getElementsByTagName('name')[0].textContent + '</li>';
+        result += '  <li>email:' + objects[i].getElementsByTagName('email')[0].textContent + '</li>';
+        result += '  <li>created-at:' + objects[i].getElementsByTagName('created-at')[0].textContent + '</li>';
+        result += '  <li>updated-at:' + objects[i].getElementsByTagName('updated-at')[0].textContent + '</li>';
+        result += '  <li><img src="' + objects[i].getElementsByTagName('avatar')[0].textContent + '" width="150px"></li>';
         result += '</ul>';
       }
 
@@ -556,11 +555,6 @@ document.getElementById('btn4')
     getUser('https://thetestrequest.com/authors.xml', 'GET');
   });
 </script>
-
-</body>
-</html>
-
-
 
 </body>
 </html>

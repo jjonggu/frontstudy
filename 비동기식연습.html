@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <button id="btn">클릭하면 콘솔창에 데이터나옴</button>
+    <script>
+        const getUsers = (url, method) => {
+            fetch(url, {method: method})
+            .then(response => response.text())
+            .then(resData => { 
+                let domParser = new DOMParser()
+                let xmlDoc = domParser.parseFromString(resData, 'application/xml')
+                const objects = document.getElementsByTagName('object')
+                console.log(resData)
+            })
+        
+        }
+
+        
+        document.getElementById('btn').addEventListener('click', () =>{
+            getUsers('https://thetestrequest.com/authors.xml', 'GET')
+        })
+    </script>
+</body>
+</html>
