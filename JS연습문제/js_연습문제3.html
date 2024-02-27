@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.5/js.cookie.min.js" integrity="sha512-nlp9/l96/EpjYBx7EP7pGASVXNe80hGhYAUrjeXnu/fyF5Py0/RXav4BBNs7n5Hx1WFhOEOWSAVjGeC3oKxDVQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
   
@@ -88,11 +90,11 @@
   <div id="div3">
     <div id="original-image"></div>
     <div id="thumbnail-images">
-      <div style="background-image: url('../../assets/image/architecture1.jpg');"></div>
-      <div style="background-image: url('../../assets/image/architecture2.jpg');"></div>
-      <div style="background-image: url('../../assets/image/architecture3.jpg');"></div>
-      <div style="background-image: url('../../assets/image/architecture4.jpg');"></div>
-      <div style="background-image: url('../../assets/image/architecture5.jpg');"></div>
+      <div data-file-name="architecture1.jpg" style="background-image: url('../../assets/image/architecture1.jpg');"></div>
+      <div data-file-name="architecture2.jpg" style="background-image: url('../../assets/image/architecture2.jpg');"></div>
+      <div data-file-name="architecture3.jpg" style="background-image: url('../../assets/image/architecture3.jpg');"></div>
+      <div data-file-name="architecture4.jpg" style="background-image: url('../../assets/image/architecture4.jpg');"></div>
+      <div data-file-name="architecture5.jpg" style="background-image: url('../../assets/image/architecture5.jpg');"></div>
     </div>
   </div>
   <style>
@@ -124,8 +126,22 @@
     }
   </style>
   <script>
+    
     /* 5개 thumbnail 이미지에 마우스를 가져다대면 해당 이미지를 original-image로 표시하시오. */
     
+    var original_image = document.getElementById('original-image');
+    var thumbnail_images = document.querySelectorAll('#thumbnail-images > div');
+
+    for(var i = 0; i < thumbnail_images.length; i++) {
+      thumbnail_images[i].onmouseover = function(evt) {
+        original_image.style.backgroundImage = 'url(../../assets/image/'+ evt.target.dataset.fileName +')';
+        evt.target.style.border = '5px solid orange';
+      }
+      thumbnail_images[i].onmouseout = function(evt) {
+        evt.target.style.border = '5px solid rgba(0, 0, 0, 0)';
+      }
+    }
+
   </script>
 
   <hr>
@@ -154,7 +170,22 @@
       해제하면 check1.png를 checkbox 대신 나타내시오.
       체크하면 check2.png를 checkbox 대신 나타내시오.
     */
+    #div4 input[type=checkbox]{
+      display: none;
+    }
+
+    #div4 label{
+      padding-left: 20px;
+      background-image: url('../assets/image/check1.png');
+      background-size: 16px 16px;
+      background-repeat: no-repeat;
+      background-position: 0 2px;
+      cursor: pointer;
+    }
     
+    #div4 input[type=checkbox]:checked + label {
+      background-image: url('../assets/image/check2.png');
+    }
   </style>
   <script>
     var chkAll = document.getElementById('chk_all');
@@ -201,6 +232,20 @@
       Hint) data-state="close-answer"는 정답 숨김 상태를 의미하고,
             data-state="open-answer"는 정답 보임 상태를 의미한다.
     */
+
+    document.getElementById('btn5').onclick = function(evt){
+  
+      if(evt.target.dataset.state === 'close-answer'){
+        document.getElementById('answer').style.display = 'block'
+        evt.target.textContent = '정답 보기'
+        evt.target.dataset.state === 'open-answer'
+      }else{
+        document.getElementById('answer').style.display = 'none'
+        evt.target.textContent = '정답 숨기기'
+        evt.target.dataset.state === 'close-answer'
+      }
+    }
+
 
   </script>
 

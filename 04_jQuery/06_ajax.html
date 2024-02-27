@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+<body>
+  
+  <div><button type="button" id="btn1">버튼1</button></div>
+  <script>
+    $('#btn1').on('click', function(evt){
+      // get 방식의 ajax 처리
+      $.get('https://thetestrequest.com/authors/1.xml', 'xml', function(resData){
+        console.log('success', resData);
+      })
+      // 3.0 이후                     // 3.0 이전
+      .done(function(resData){        // .success(function(){})
+        console.log('done', resData);
+      })
+      .fail(function(){               // .error(function(){})
+        console.log('fail');
+      })
+      .always(function(){             // .complete(function(){})
+        console.log('always');
+      });
+    })
+  </script>
+
+  <div>
+    <button type="button" id="btn2">버튼2</button>
+  </div>
+  <script>
+    $('#btn2').on('click', function(evt){
+      $.getJSON('https://jsonplaceholder.typicode.com/photos/1', function(resData){
+        console.log('success', resData);
+      })
+      .done(function(resData){
+        console.log('done', resData);
+      })
+      .fail(function(){
+        console.log('fail');
+      })
+      .always(function(){
+        console.log('always');
+      })
+    })
+  </script>
+
+  <div>
+    <button type="button" id="btn3">버튼3</button>
+  </div>
+  <script>
+
+    $('#btn3').on('click', function(evt){
+      
+      $.ajax({
+
+        /* 요청 */
+        type: 'GET',  /* 요청 메소드
+                          GET (디폴트)
+                          POST
+                          PUT
+                          DELETE */      
+
+        url: 'https://thetestrequest.com/authors/1.xml', /* 요청 URL */
+
+        async: true,  /* 비동기/동기 작업
+                         true  : 비동기 작업 (디폴트)
+                         false : 동기 작업 */
+        
+        /* 응답 */
+        dataType: 'xml',  /* 응답 데이터 타입
+                             xml
+                             json
+                             script : JavaScript 코드를 문자열로 받아옴
+                             html   : HTML 태그를 문자열로 받아옴
+                             text   : 일반 문자열을 받아옴 */
+        
+        success: function(resData){         /* 응답 데이터를 받아오는 함수
+                                              function(Anything data, [String textStatus], [jqXHR jqXHR]) {
+
+                                              });  */
+          console.log('success', resData);
+        },
+
+        error: function(jqXHR){             /* 요청 실패 시 동작하는 함수
+                                              function(jqXHR jqXHR, [String textStatus], [String errorThrown]){
+
+                                              })  */
+          console.log('error', jqXHR.status);
+          console.log('error', jqXHR.statusText);
+          console.log('error', jqXHR.responseText);
+        }
+      })
+      .done(function(resData){
+        console.log('done', resData);
+      })
+      .fail(function(jqXHR){
+        console.log('fail', jqXHR.status);
+        console.log('fail', jqXHR.statusText);
+        console.log('fail', jqXHR.responseText);
+      })
+      .always(function(){
+        console.log('always');
+      })
+    })
+  </script>
+
+  <div>
+    <button type="button" id="btn4">버튼4</button>
+  </div>
+  <script>
+
+    $('#btn4').on('click', function(evt){
+
+      new Promise(function(resolve, reject){
+        $.ajax({
+          type: 'GET',
+          url: 'https://jsonplaceholder.typicode.com/photos/2',
+          dataType: 'json',
+          success: function(resData){
+            resolve(resData);
+          },
+          error: function(jqXHR){
+            reject(jqXHR);
+          }
+        })
+      })
+        .then(function(resData){
+          $.ajax({
+            type: 'GET',
+            url: 'https://thetestrequest.com/authors/' + resData.id + '.xml',
+            dataType: 'xml',
+            success: function(resData){
+              console.log(resData);
+            }
+          })
+        }, function(jqXHR){
+          console.log(jqXHR.status);
+        });
+
+      /*
+      new Promise(function(resolve, reject){
+
+      })
+        .then(function(resData){
+
+        })
+        .catch(function(jqXHR){
+          
+        });
+      */
+
+    });
+
+  </script>
+
+  <div>
+    <button type="button" id="btn5">버튼5</button>
+  </div>
+  <script>
+
+    function myFunc1(){
+      return new Promise(function(resolve, reject){
+        $.ajax({
+          type: 'GET',
+          url: 'https://jsonplaceholder.typicode.com/photos/1',
+          dataType: 'json',
+          success: function(response1){
+            resolve(response1);
+          }
+        })
+      });
+    }
+    function myFunc2(response1){
+      return new Promise(function(resolve, reject){
+        $.ajax({
+          type: 'GET',
+          url: 'https://thetestrequest.com/authors/' + (response1.id + 1) + '.xml',
+          dataType: 'xml',
+          success: function(response2){
+            resolve(response2);
+          }
+        })
+      });
+    }
+    function myFunc3(response2){
+      return new Promise(function(resolve, reject){
+        $.ajax({
+          type: 'GET',
+          url: 'https://jsonplaceholder.typicode.com/photos/' + (Number($(response2).find('id').text()) + 1),
+          dataType: 'json',
+          success: function(response3){
+            resolve(response3);
+          }
+        })
+      });
+    }
+
+    function myJob(){
+      myFunc1()
+      .then(function(response1){
+        return myFunc2(response1);
+      })
+      .then(function(response2){
+        return myFunc3(response2);
+      })
+      .then(function(response3){
+        console.log(response3);
+      });
+    }
+
+    $('#btn5').on('click', myJob);
+
+  </script> 
+
+</body>
+</html>
